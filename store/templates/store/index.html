@@ -1,0 +1,227 @@
+{% extends 'store/_Master.html' %}
+{% load static %}
+{% load humanize %} <!-- Định dạng lại chữ số thập phân-->
+{% block title_tab %}Estore | Trang chủ{% endblock title_tab %}
+{% block main_content %}
+
+    <!-- Main Slider Start -->
+    <div class="header">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-9">
+                    <div class="header-slider normal-slider">
+                        <div class="header-slider-item">
+                            <img src="{% static 'store/sliders/slider-1.png' %}" alt="Slider Image 1" />
+                            
+                        </div>
+                        <div class="header-slider-item">
+                            <img src="{% static 'store/sliders/slider-2.png' %}" alt="Slider Image 2" />
+                            
+                        </div>
+                        <div class="header-slider-item">
+                            <img src="{% static 'store/sliders/slider-3.png' %}" alt="Slider Image 3" />
+                            
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="col-md-3">
+                    <div  class="header-img">
+                        <div style="height: 200px;" class="img-item">
+                            <img src="{% static 'store/images/dung-cu-nha-bep.png' %}" />
+                            <a class="img-text" href="{% url 'store:dung_cu_nha_bep' %}">
+                                <p>Dụng cụ nhà bếp</p>
+                            </a>
+                        </div>
+                        <div style="height: 200px;" class="img-item">
+                            <img src="{% static 'store/images/thiet-bi-gia-dinh.png' %}" />
+                            <a class="img-text" href="{% url 'store:thiet_bi_gia_dinh' %}">
+                                <p>Thiết bị gia đình</p>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Main Slider End -->      
+    
+    <!-- Brand Start -->
+    <div class="brand">
+        <div class="container-fluid">
+            <div class="brand-slider">
+                <div class="brand-item"><img src="{% static 'store/brands/lg.png' %}" alt="lg"></div>
+                <div class="brand-item"><img src="{% static 'store/brands/panasonic.png' %}" alt="panasonic"></div>
+                <div class="brand-item"><img src="{% static 'store/brands/philips.png' %}" alt="philips"></div>
+                <div class="brand-item"><img src="{% static 'store/brands/samsung.png' %}" alt="samsung"></div>
+                <div class="brand-item"><img src="{% static 'store/brands/sharp.png' %}" alt="sharp"></div>
+                <div class="brand-item"><img src="{% static 'store/brands/sunhouse.png' %}" alt="sunhouse"></div>
+            </div>
+        </div>
+    </div>
+    <!-- Brand End -->      
+    
+    <!-- Feature Start-->
+    <div class="feature">
+        <div class="container-fluid">
+            <div class="row align-items-center">
+                <div class="col-lg-3 col-md-6 feature-col">
+                    <div class="feature-content">
+                        <i class="fab fa-cc-mastercard"></i>
+                        <h2>Thanh toán tiện lợi</h2>
+                        <p>
+                            Lorem ipsum dolor sit amet consectetur elit
+                        </p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 feature-col">
+                    <div class="feature-content">
+                        <i class="fa fa-truck"></i>
+                        <h2>Vận chuyển toàn quốc</h2>
+                        <p>
+                            Lorem ipsum dolor sit amet consectetur elit
+                        </p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 feature-col">
+                    <div class="feature-content">
+                        <i class="fa fa-sync-alt"></i>
+                        <h2>Hoàn trả trong 7 ngày</h2>
+                        <p>
+                            Lorem ipsum dolor sit amet consectetur elit
+                        </p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 feature-col">
+                    <div class="feature-content">
+                        <i class="fa fa-comments"></i>
+                        <h2>Hỗ trợ 24/7</h2>
+                        <p>
+                            Lorem ipsum dolor sit amet consectetur elit
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Feature End-->      
+    
+    <!-- Call to Action Start -->
+    <div class="call-to-action">
+        <div class="container-fluid">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <h1>Gọi cho chúng tôi</h1>
+                </div>
+                <div class="col-md-6">
+                    <a href="tel:0123456789">+012-345-6789</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Call to Action End -->       
+    
+    <!-- Featured Product Start -->
+    <div class="featured-product product">
+        <div class="container-fluid">
+            <div class="section-header">
+                <h1>Đồ dùng nhà bếp</h1>
+            </div>
+            <div class="row align-items-center product-slider product-slider-4">
+                {% for san_pham in product_ddnb %}
+                    <div class="col-lg-3">
+                        <div class="product-item">
+                            <div class="product-title" style="height: 110px;">
+                                <a href="{% url 'store:product_detail' san_pham.id %}">{{san_pham}}</a>
+                            </div>
+                            <div class="product-image">
+                                <a href="{% url 'store:product_detail' san_pham.id %}">
+                                    <img src="{{san_pham.image.url}}" alt="Product Image">
+                                </a>
+
+                            </div>
+                            <div class="product-price">
+                                <form method = 'post' action = "{% url 'cart:buy_now' san_pham.pk %}">
+                                    {% csrf_token %}
+                                    <h3 style="font-size: 20px !important;" >{{san_pham.price|floatformat:0|intcomma}}<span>đ</span></h3>
+                                    <!-- floatformat: là số lượng con số sẽ lấy sau dấu phẩy, có số 0 là không lấy-->
+                                    <button type = "submit" class="btn" >
+                                        <i class="fa fa-shopping-cart"></i>Mua ngay
+                                    </button>
+                                    <input type = "hidden" value = "1" name = "quantity"/>
+                                </form>
+                                
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+                
+            </div>
+        </div>
+    </div>
+    <!-- Featured Product End -->       
+    
+    <!-- Newsletter Start -->
+    <div class="newsletter">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-6">
+                    <h1>Subscribe Our Newsletter</h1>
+                </div>
+                <div class="col-md-6">
+                    <div class="form">
+                        <input type="email" value="Your email here">
+                        <button>Submit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Newsletter End -->        
+    
+    <!-- Recent Product Start -->
+    <div class="recent-product product">
+        <div class="container-fluid">
+            <div class="section-header">
+                <h1>Thiết bị gia đình</h1>
+            </div>
+            <div class="row align-items-center product-slider product-slider-4">
+                {% for san_pham in product_tbgd%}
+                    <div class="col-lg-3">
+                        <div class="product-item">
+                            <div class="product-title" style="height: 110px;">
+                                <a href="{% url 'store:product_detail' san_pham.id %}">{{san_pham.name}}</a>
+                                <!-- <div class="ratting">
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                </div> -->
+                            </div>
+                            <div class="product-image">
+                                <a href="{% url 'store:product_detail' san_pham.id %}">
+                                    <img src="{{san_pham.image.url}}" alt="Product Image">
+                                </a>
+
+                            </div>
+                            <div class="product-price">
+                                <form method = 'post' action = "{% url 'cart:buy_now' san_pham.pk %}">
+                                    {% csrf_token %}
+                                    <h3 style="font-size: 20px !important;">{{san_pham.price|floatformat:0|intcomma}}<span>đ</span></h3>
+                                    <!-- floatformat: là số lượng con số sẽ lấy sau dấu phẩy, có số 0 là không lấy-->
+                                    <button type = "submit" class="btn" >
+                                        <i class="fa fa-shopping-cart"></i>Mua ngay
+                                    </button>
+                                    <input type = "hidden" value = "1" name = "quantity"/>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <!-- Recent Product End -->      
+        
+{% endblock %}

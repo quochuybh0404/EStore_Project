@@ -1,0 +1,195 @@
+{% extends 'store/_Master.html' %}
+{% load static %}
+{% load humanize %} <!-- Định dạng lại chữ số thập phân-->
+{% block title_tab %}Estore | Đăng nhập & Đăng ký {% endblock title_tab %}
+{% block main_content %}
+        
+        <!-- Breadcrumb Start -->
+        <div class="breadcrumb-wrap">
+            <div class="container-fluid">
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'store:index' %}">Home</a></li>
+                    <li class="breadcrumb-item active">Đăng nhập / Đăng ký</li>
+                </ul>
+            </div>
+        </div>
+        <!-- Breadcrumb End -->
+        
+        <!-- Login Start -->
+        <div class="login">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <form method = "post">
+                            <div class="register-form">
+                                {%csrf_token%}
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        {{result_singup|safe}}
+                                    </div>
+                                    <div class="col-md-6">
+                                        {{form_signup.last_name.label}}
+                                        {{form_signup.last_name}}
+                                    </div>
+                                    <div class="col-md-6">
+                                        {{form_signup.first_name.label}}
+                                        {{form_signup.first_name}}
+                                    </div>                      
+                                    <div class="col-md-6">
+                                        {{form_signup.email.label}}
+                                        {{form_signup.email}}
+                                    </div>
+                                    <div class="col-md-6">
+                                        {{form_signup.tel.label}}
+                                        {{form_signup.tel}}
+                                    </div>
+                                    <div class="col-md-6">
+                                        {{form_signup.password.label}}
+                                        {{form_signup.password}}
+                                    </div>
+                                    <div class="col-md-6">
+                                        {{form_signup.confirm_password.label}}
+                                        {{form_signup.confirm_password}}
+                                    </div>
+                                    <div class="col-md-4">
+                                        {{form_signup.province.label}}
+                                        {{form_signup.province}}
+                                    </div>
+                                    <div class="col-md-4">
+                                        {{form_signup.district.label}}
+                                        {{form_signup.district}}
+                                    </div>
+                                    <div class="col-md-4">
+                                        {{form_signup.ward.label}}
+                                        {{form_signup.ward}}
+                                    </div>
+                                    <div class="col-md-12">
+                                        {{form_signup.address.label}}
+                                        {{form_signup.address}}
+                                    </div>
+                                    <div class="col-md-12">
+                                        <button class="btn" name = "btnDangKy" value = "Đăng ký">Đăng ký</button>  <!--value muốn gán giá trị gì cũng đc-->
+                                    </div>
+                                </div>
+                            </div>
+                        </form>                           
+                    </div>
+                    <div class="col-lg-6">               
+                        <form method = "post">
+                            {%csrf_token%}
+                            <div class="login-form">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label>E-mail</label>
+                                        <!--Làm việc trực tiếp trên html-->
+                                        <input class="form-control" type="text" placeholder="Email" name="email"> 
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label>Mật khẩu</label>
+                                        <input class="form-control" type="password" placeholder="Mật khẩu" name = "mat_khau">
+                                    </div>
+                                    <!-- <div class="col-md-12">
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="newaccount">
+                                            <label class="custom-control-label" for="newaccount">Keep me signed in</label>
+                                        </div>
+                                    </div> -->
+                                    <div class="col-md-6">
+                                        <a href="{% url 'customer:reset_password' %}" style="text-decoration: underline; color:blue;">Quên mật khẩu?</a>
+                                    </div><br><br>
+                                    <div class="col-md-12">
+                                        <button class="btn" name = "btnDangNhap" value = "Đăng nhập">Đăng nhập</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Login End -->
+
+<script>
+    $(document).ready(function () {
+        // Provinces
+        var province_arr = new Array{{ provinces|safe }};
+        $('#id_province').append($('<option>', {
+                value: '0',
+                text: 'Chọn Tỉnh/TP',
+            }, '</option>'));
+        $.each(province_arr, function (i, item) {
+            $('#id_province').append($('<option>', {
+                value: item,
+                text: item,
+            }, '</option>'));
+        });
+    });
+
+    // District
+    var districts = new Array{{ str_districts|safe }};
+    var d_a = new Array();
+    d_a[0] = 'Chọn Quận/Huyện';
+    {% for province in provinces %}
+        d_a['{{ province }}'] = districts[{{ forloop.counter0 }}];
+    {% endfor %}
+
+    // Ward
+    var wards = new Array{{ str_wards|safe }};
+    var w_a = new Array();
+    {% for district in list_districts %}
+        w_a['{{ district }}'] = wards[{{ forloop.counter0 }}];
+    {% endfor %}
+
+    $('#id_province').change(function () {
+        var c = $(this).val();
+        var district_arr = d_a[c].split("|");
+        $('#id_district').empty();
+        $('#id_ward').empty();
+        if (c == '0') {
+            $('#id_district').append($('<option>', {
+                value: '0',
+                text: 'Chọn Quận/Huyện',
+            }, '</option>'));
+        } else {
+            $('#id_district').append($('<option>', {
+                value: '0',
+                text: 'Chọn Quận/Huyện',
+            }, '</option>'));
+            $.each(district_arr, function (i, item_district) {
+                $('#id_district').append($('<option>', {
+                    value: item_district,
+                    text: item_district,
+                }, '</option>'));
+            });
+        }
+        $('#id_ward').append($('<option>', {
+            value: '0',
+            text: 'Chọn Phường/Xã',
+        }, '</option>'));
+    });
+
+    $('#id_district').change(function(){
+        var s = $(this).val();
+        if(s == '0'){
+            $('#id_ward').empty();
+            $('#id_ward').append($('<option>', {
+                value: '0',
+                text: 'Chọn Phường/Xã',
+            }, '</option>'));
+        }
+        var ward_arr = w_a[s].split("|");
+        $('#id_ward').empty();
+        $('#id_ward').append($('<option>', {
+                value: '0',
+                text: 'Chọn Phường/Xã',
+            }, '</option>'));
+        $.each(ward_arr, function (j, item_ward) {
+            $('#id_ward').append($('<option>', {
+                value: item_ward,
+                text: item_ward,
+            }, '</option>'));
+        });
+    });
+</script>
+        
+{% endblock %}
