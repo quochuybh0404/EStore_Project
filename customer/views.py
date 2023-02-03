@@ -1,35 +1,35 @@
-from django.shortcuts import render
-
 # Create your views here.
-from base64 import encode
 from django.shortcuts import render,redirect
 from customer.forms import FormSignUp
 from customer.models import Customer
 from django.contrib.auth.hashers import PBKDF2PasswordHasher
-from customer.libs import * 
 from cart.cart import Cart
 from cart.models import Order, OrderItem
 from store.models import Product
 from EStore.settings import EMAIL_HOST_USER
-from django.core.mail import send_mail, EmailMultiAlternatives
+from django.core.mail import EmailMultiAlternatives
 
+import json
 # Create your views here.
 def customer_login(request):
     # Kiểm tra trạng thái của session
     if 'session_KhachHang' in request.session:
         return redirect('store:index')
 
-    # Lất thông tin tỉnh/tp, quận/huyện, phường/xã
-    du_lieu = read_json_internet('http://api.laptrinhpython.net/vietnam')
+    # Đọc file json
+    with open('vietnam.json', 'r',encoding="utf8") as f:
+        du_lieu = json.load(f)
+    
     # Tỉnh/TP
     list_provinces = []
     str_districts = []
     str_wards = []
     list_districts_2 = []
     for province in du_lieu:
-        if province['name'] == 'Hồ Chí Minh' or province['name'] == "Hà Nội"\
-             or province['name'] == 'Hải Phòng' or province['name'] == 'Đà Nẵng'\
-                 or province['name'] == 'Cần Thơ'  :
+        if province['name'] == "Hà Nội":
+            list_provinces.append('Thủ đô ' + province['name'])
+        elif province['name'] == 'Hồ Chí Minh' or province['name'] == 'Hải Phòng'\
+             or province['name'] == 'Đà Nẵng' or province['name'] == 'Cần Thơ'  :
             list_provinces.append('Thành phố ' + province['name'])
         else:
             list_provinces.append('Tỉnh ' + province['name'])
@@ -115,7 +115,9 @@ def my_account(request):
         return redirect('customer:customer_login')
 
     # Lất thông tin tỉnh/tp, quận/huyện, phường/xã
-    du_lieu = read_json_internet('http://api.laptrinhpython.net/vietnam')
+    # Đọc file json
+    with open('/home/quochuybh0404/estore_project/vietnam.json', 'r',encoding="utf8") as f:
+        du_lieu = json.load(f)
     # Tỉnh/TP
     list_provinces = []
     str_districts = []

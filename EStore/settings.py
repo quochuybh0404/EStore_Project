@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'admin_estore',
     'ckeditor',
     'ckeditor_uploader',
+    'mathfilters',
 ]
 
 MIDDLEWARE = [
